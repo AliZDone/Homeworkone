@@ -1,9 +1,23 @@
 from django.contrib import admin
-from .models import Mobile, Laptop, Client, Seller, Order, Tv, Furniture, Refrigerator, Gas, T_shirt, pants
+
+from .models import (
+    Client,
+    Furniture,
+    Gas,
+    Laptop,
+    Mobile,
+    Order,
+    Refrigerator,
+    Seller,
+    T_shirt,
+    Tv,
+    pants,
+)
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'price', 'product')
+    list_display = ("customer", "price", "product")
+
 
 admin.site.register(Mobile)
 admin.site.register(Laptop)
@@ -16,4 +30,3 @@ admin.site.register(Gas)
 admin.site.register(Furniture)
 admin.site.register(Refrigerator)
 admin.site.register(Order, OrderAdmin)
-

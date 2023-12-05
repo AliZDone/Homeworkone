@@ -1,7 +1,8 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
+
 
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -14,15 +15,14 @@ class Person(models.Model):
 
 
 class Client(Person):
-    zip_code = models.PositiveIntegerField() 
+    zip_code = models.PositiveIntegerField()
 
 
 class Seller(Person):
-
     PRODUCTS_VARITY = {
-        ('clothing', 'Clothing'),
-        ('electronic device', 'Electronic device'),
-        ('home Appliances', 'Home Appliances')
+        ("clothing", "Clothing"),
+        ("electronic device", "Electronic device"),
+        ("home Appliances", "Home Appliances"),
     }
 
     products_varity = models.CharField(choices=PRODUCTS_VARITY, max_length=25)
@@ -30,13 +30,11 @@ class Seller(Person):
 
 
 class Product(models.Model):
-
     name = models.CharField(max_length=150)
     price = models.PositiveIntegerField()
 
     def __str__(self):
         return self.name
-        
 
 
 class Order(models.Model):
@@ -46,33 +44,26 @@ class Order(models.Model):
 
     # def __str__(self) -> str:
     #     return f"{self.customer}"
-    
+
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='OrderItem')
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="OrderItem"
+    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
 
 class Clothing(Product):
+    GENDER = {("male", "Male"), ("female", "Female"), ("baby", "Baby")}
 
-    GENDER = {
-        ("male", "Male"),
-        ("female", "Female"),
-        ("baby", "Baby")
-    }
-
-    STYLE = {
-        ("normal", "Normal"),
-        ("classic", "Classic"),
-        ("slash", "Slash")
-    }
+    STYLE = {("normal", "Normal"), ("classic", "Classic"), ("slash", "Slash")}
 
     MATERIAL = {
         ("cotton", "Cotton"),
         ("woolen", "Woolen"),
         ("silk", "Silk"),
-        ("linen", "Linen")
+        ("linen", "Linen"),
     }
 
     SIZE = {
@@ -92,74 +83,42 @@ class Clothing(Product):
 
 
 class T_shirt(Clothing):
-
-    SLEEVE_SIZE = {
-        ('long', 'Long'),
-        ('short', 'Short')
-    }
+    SLEEVE_SIZE = {("long", "Long"), ("short", "Short")}
 
     Sleeve = models.CharField(choices=SLEEVE_SIZE, max_length=10)
 
 
 class pants(Clothing):
-    
-    CROTCH = {
-        ('long', 'Long'),
-        ('short', 'Short')
-    }
-    
+    CROTCH = {("long", "Long"), ("short", "Short")}
+
     crotch = models.CharField(choices=CROTCH, max_length=10)
 
 
 class HomeAppliance(Product):
+    PLACE = {("kitchen", "Kitchen"), ("livingroom", "livingroom")}
 
-    PLACE = {
-        ('kitchen', 'Kitchen'),
-        ('livingroom', 'livingroom')
-    }
+    MATERIAL_BODY = {("wood", "Wood"), ("steal", "Steal")}
 
-    MATERIAL_BODY = {
-        ('wood', 'Wood'),
-        ('steal', 'Steal')
-    }
-
-    place =models.CharField(choices=PLACE, max_length=20)
+    place = models.CharField(choices=PLACE, max_length=20)
 
 
 class KitchenAppliance(HomeAppliance):
-
-    WORK_WITH = {
-        ('gas', 'Gas'),
-        ('electricity', 'Electricity')
-    }
+    WORK_WITH = {("gas", "Gas"), ("electricity", "Electricity")}
 
     work_with = models.CharField(choices=WORK_WITH, max_length=20)
 
 
 class Refrigerator(KitchenAppliance):
-
-    POWER_USAGE = {
-        ('b', 'B'),
-        ('a', 'A'),
-        ('a+', 'A+'),
-        ('a++', 'A++')
-    }
+    POWER_USAGE = {("b", "B"), ("a", "A"), ("a+", "A+"), ("a++", "A++")}
 
     power_usage = models.CharField(choices=POWER_USAGE, max_length=3)
     capacity_litre = models.PositiveIntegerField()
 
 
 class Gas(KitchenAppliance):
+    QUALITY = {("steal", "Steal"), ("glass", "Glass")}
 
-    QUALITY = {
-        ('steal', 'Steal'),
-        ('glass', 'Glass')
-    }
-
-    GAS_TYPE = {
-        ('stove', 'Stove'),
-        ('sheet', 'Sheet')
-    }
+    GAS_TYPE = {("stove", "Stove"), ("sheet", "Sheet")}
 
     gas_type = models.CharField(choices=GAS_TYPE, max_length=5)
     quality = models.CharField(choices=QUALITY, max_length=5)
@@ -167,30 +126,25 @@ class Gas(KitchenAppliance):
 
 
 class Tv(HomeAppliance):
+    QUALITY = {("HD", "HD"), ("FULLHD", "FULLHD"), ("4K", "4K")}
 
-    QUALITY = {
-        ('HD', 'HD'),
-        ('FULLHD', 'FULLHD'),
-        ('4K', '4K')
-    }
- 
     quality = models.CharField(choices=QUALITY, max_length=6)
-    technology = models.CharField(max_length=50, default='LED')
+    technology = models.CharField(max_length=50, default="LED")
 
 
 class Furniture(HomeAppliance):
-
-    material_body = models.CharField(choices=HomeAppliance.MATERIAL_BODY, max_length=10)
+    material_body = models.CharField(
+        choices=HomeAppliance.MATERIAL_BODY, max_length=10
+    )
     Capacity = models.DecimalField(max_digits=15, decimal_places=1)
 
 
 class Electronicdevice(Product):
-    
     USE_FOR = {
-        ("office", 'Office'),
-        ('student', 'Student'),
-        ('work', 'Work'),
-        ('game', 'Game')
+        ("office", "Office"),
+        ("student", "Student"),
+        ("work", "Work"),
+        ("game", "Game"),
     }
 
     model = models.CharField(max_length=150)
@@ -202,13 +156,12 @@ class Electronicdevice(Product):
 
 
 class Laptop(Electronicdevice):
-
     RESOLUTION = {
-        ('1280×720', '1280×720'),
-        ('1920×1080', '1920×1080'),
-        ('3840×2160', '3840×2160')
+        ("1280×720", "1280×720"),
+        ("1920×1080", "1920×1080"),
+        ("3840×2160", "3840×2160"),
     }
-    
+
     ram = models.PositiveIntegerField()
     cpu_model = models.CharField(max_length=150)
     number_core = models.PositiveIntegerField()
@@ -221,11 +174,7 @@ class Laptop(Electronicdevice):
 
 
 class Mobile(Electronicdevice):
-
-    OS = {
-        ('android', 'Android'),
-        ('ios', 'Ios')
-    }
+    OS = {("android", "Android"), ("ios", "Ios")}
 
     screen_size = models.FloatField()
     cpu = models.CharField(max_length=200)
@@ -236,5 +185,3 @@ class Mobile(Electronicdevice):
 
     def __str__(self) -> str:
         return self.name
-
-    
